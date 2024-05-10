@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.List;
 
 //seran instruccuines del hilo
 public class GestionCliente implements Runnable{
@@ -34,11 +33,11 @@ public class GestionCliente implements Runnable{
     }
 
     @Override
-    public void run() {
+    public void run() { //escucha al cliente
         try {
-            while (true) {
+            while (!Thread.currentThread().isInterrupted()) {
                 // Leer mensaje del cliente
-                Object mensaje = entrada.readObject();
+                Object mensaje = entrada.readObject(); //recibira objetos, y dependera del tipo de objeto la respuesta
                 if (mensaje instanceof Object[]) {
                     Object[] datosToServer = (Object[]) mensaje;
                     String tipoMensaje = (String) datosToServer[0];
@@ -48,6 +47,10 @@ public class GestionCliente implements Runnable{
                             String contrasena = (String) datosToServer[2];
                             boolean resultadoInicioSesion = server.verificarInicioSesion(usuario, contrasena);
                             enviarDatos(new Object[]{"resultadoInicioSesion", resultadoInicioSesion});
+                            if (!resultadoInicioSesion){
+                                server.removerCliente(this);
+                                cerrarConexion();
+                            }
                             break;
                         case "mensaje":
                             String mensajeGlobal = (String) datosToServer[1];
@@ -58,6 +61,8 @@ public class GestionCliente implements Runnable{
                             String pass = (String) datosToServer[2];
                             boolean resultadoRegistro = server.registrarUsuario(nombre, pass);
                             enviarDatos(new Object[]{"resultadoRegistro", resultadoRegistro});
+                            server.removerCliente(this);
+                            cerrarConexion();
                             break;
                         case "solicitoMensajesPrevios":
                             Object[] mensajesPrevios = server.obtenerMensajesPrevios();
@@ -89,6 +94,7 @@ public class GestionCliente implements Runnable{
             entrada.close();
             salida.close();
             sc.close();
+            Thread.currentThread().interrupt();
         } catch (IOException e) {
             System.err.println("Error al cerrar la conexión: " + e.getMessage());
         }

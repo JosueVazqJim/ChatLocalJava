@@ -128,7 +128,7 @@ public class Server {
     }
 
     public void archivos() {
-
+        int index = 0;
     }
 
     public void removerCliente(GestionCliente cliente) {

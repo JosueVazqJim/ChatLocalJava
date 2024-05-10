@@ -127,6 +127,9 @@ public class Server {
         }
     }
 
+    public void archivos() {
+
+    }
 
     public void removerCliente(GestionCliente cliente) {
         clientes.remove(cliente);

@@ -79,6 +79,7 @@ public class GestionCliente implements Runnable{
                             // prepara el archivo en el lugar de almacenamiento del servidor
                             FileOutputStream fileOutputStream = new FileOutputStream(server.pathAlmacenamiento() + nombreArchivo);
                             fileOutputStream.write(fileBytes); //escribe el archivo donde se le dijo que preparara
+                            System.out.println("Archivo recibido: " + nombreArchivo);
                             fileOutputStream.close();
                             break;
                         case "exit":

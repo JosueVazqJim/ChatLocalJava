@@ -11,18 +11,19 @@ public class Chat extends JFrame implements MensajeListener{
     private JTextField txt_mensajeEnviar;
     private JButton btn_enviarMensaje;
     private JButton btn_salir;
+    private JButton transferenciaDeArchivosButton;
 
     private Login login;
     private boolean listening = true;
 
     Cliente cliente;
 
-    public Chat( Cliente cliente, Login login ) {
+    public Chat( Cliente cliente, Login login) {
         this.login = login;
         this.cliente = cliente;
 
         setContentPane(panel1);
-        setTitle("Chat");
+        setTitle("CHAT");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 500);
         setLocationRelativeTo(null);
@@ -46,6 +47,13 @@ public class Chat extends JFrame implements MensajeListener{
                 enviarMensaje();
             }
         });
+        transferenciaDeArchivosButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false);
+                login.mostrarTransferenciaArchivos();
+            }
+        });
     }
 
     public void cerrarSesion() throws IOException {
@@ -54,8 +62,7 @@ public class Chat extends JFrame implements MensajeListener{
         listening = false; // Detiene el hilo de escucha
         System.out.println("Sesión cerrada");
         cliente.cerrarConexion();
-        dispose(); //libera los recursos
-
+        this.dispose(); //libera los recursos
     }
 
     public void solicitoMensajesPrevios() {

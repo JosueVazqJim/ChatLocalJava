@@ -14,6 +14,8 @@ public class Login extends JFrame{
     private JPanel panel1;
 
     private Cliente cliente;
+    private Chat chat;
+    private TransferenciaArchivos transferenciaArchivos;
 
     public Login() {
         setContentPane(panel1);
@@ -46,9 +48,11 @@ public class Login extends JFrame{
         boolean permiso = cliente.iniciarSesion(txt_usuario.getText(), String.valueOf(txt_pass.getPassword()));
 
         if (permiso){
-            Chat chat = new Chat(cliente, this);
+            chat = new Chat(cliente, this);
+            transferenciaArchivos = new TransferenciaArchivos(cliente, this);
             setVisible(false);
             chat.setVisible(true);
+            transferenciaArchivos.setVisible(false);
         } else {
             JOptionPane.showMessageDialog(null, "Inicio de sesión fallido", "Inicio de sesión", JOptionPane.ERROR_MESSAGE);
         }
@@ -61,5 +65,13 @@ public class Login extends JFrame{
         } else {
             JOptionPane.showMessageDialog(null, "Registro fallido", "Registro", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    public void mostrarChat(){
+        chat.setVisible(true);
+    }
+
+    public void mostrarTransferenciaArchivos(){
+        transferenciaArchivos.setVisible(true);
     }
 }

@@ -95,13 +95,7 @@ public class Cliente {
         }
     }
 
-    public void enviarArchivo(String path) throws IOException {
-        socket = new Socket("localhost", 5000);
-        System.out.println("Conectado al servidor");
-        // Streams de entrada y salida
-        salida = new ObjectOutputStream(socket.getOutputStream());
-        entrada = new ObjectInputStream(socket.getInputStream());
-
+    public void enviarArchivo(String path) {
         try {
             // Abre el archivo
             File file = new File(path); //se selecciona el archivo
@@ -111,7 +105,7 @@ public class Cliente {
 
             // Envia el nombre del archivo y su contenido al servidor
             salida.writeObject(new Object[]{"enviarArchivo", file.getName(), fileBytes});
-
+            System.out.println("Archivo enviado");
             // Cierra el archivo
             fileInputStream.close();
         } catch (IOException e) {

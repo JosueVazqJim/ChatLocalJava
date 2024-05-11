@@ -132,5 +132,15 @@ public class Cliente {
         System.out.println("Conexión cerrada");
     }
 
+    public void descargarArchivo(String nombreArchivo) {
+        try {
+            salida.writeObject(new Object[]{"descargarArchivo", nombreArchivo});
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    public String pathDescarga() {
+        return "src/main/java/Cliente/descargas/";
+    }
 }

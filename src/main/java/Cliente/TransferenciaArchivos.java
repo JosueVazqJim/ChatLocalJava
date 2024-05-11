@@ -80,10 +80,10 @@ public class TransferenciaArchivos extends JFrame{
         listaArchivos.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    int index = fileList.locationToIndex(e.getPoint());
+                if (e.getClickCount() == 1) { //con un clic
+                    int index = listaArchivos.locationToIndex(e.getPoint());
                     if (index >= 0) {
-                        String fileName = fileList.getModel().getElementAt(index);
+                        String fileName = (String) listaArchivos.getModel().getElementAt(index);
                         descargarArchivo(fileName);
                     }
                 }
@@ -108,5 +108,10 @@ public class TransferenciaArchivos extends JFrame{
 
     public void onArchivoDisponible(String archivo) { //metodo de la interfaz para mostrar mensajes
         SwingUtilities.invokeLater(() -> archivosModel.addElement(archivo));
+    }
+
+    private void descargarArchivo(String fileName) {
+        cliente.descargarArchivo(fileName);
+        JOptionPane.showMessageDialog(null, "Archivo descargado", "Descarga", JOptionPane.INFORMATION_MESSAGE);
     }
 }

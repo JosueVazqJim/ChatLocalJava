@@ -93,6 +93,11 @@ public class GestionCliente implements Runnable{
                             System.out.println("Enviando lista de archivos");
                             enviarDatos(filesRespuesta);
                             break;
+                        case "descargarArchivo":
+                            String archivoDescargar = (String) datosToServer[1];
+                            byte[] archivoBytes = server.obtenerArchivo(archivoDescargar);
+                            enviarDatos(new Object[]{"archivoDescargado", archivoDescargar, archivoBytes});
+                            break;
                         case "exit":
                             System.out.println("Cerrando conexión");
                             server.removerCliente(this);

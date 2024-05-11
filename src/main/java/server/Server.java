@@ -1,6 +1,7 @@
 package server;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -130,7 +131,7 @@ public class Server {
     }
 
     public String pathAlmacenamiento() {
-        return "D:\\DOCUMENTOS\\CursoJava\\socketClienteServidorComputo\\src\\main\\java\\server\\almacenamiento\\";
+        return "src/main/java/server/almacenamiento/";
     }
 
     public void removerCliente(GestionCliente cliente) {
@@ -140,7 +141,7 @@ public class Server {
     }
     public Object[] obtenerArchivosDisponibles() {
         try {
-            File carpetaArchivos = new File("D:\\DOCUMENTOS\\CursoJava\\socketClienteServidorComputo\\src\\main\\java\\server\\almacenamiento");
+            File carpetaArchivos = new File("src/main/java/server/almacenamiento");
             File[] archivos = carpetaArchivos.listFiles();
             List<String> nombresArchivos = new ArrayList<>();
             if (archivos != null) {
@@ -153,6 +154,18 @@ public class Server {
             }
             return nombresArchivos.toArray();
         } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public byte[] obtenerArchivo(String archivoDescargar) {
+        try {
+            File archivo = new File("src/main/java/server/almacenamiento/" + archivoDescargar);
+            byte[] fileBytes = new byte[(int) archivo.length()]; //se crea un arreglo de bytes con el tamaño del archivo para guardar el contenido
+            FileInputStream fileInputStream = new FileInputStream(archivo); //se crea un flujo de entrada para leer el archivo
+            fileInputStream.read(fileBytes); //se lee el archivo y se guarda en el arreglo de bytes
+            return fileBytes;
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

@@ -3,6 +3,7 @@ package Cliente;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileOutputStream;
 
 public class Login extends JFrame{
     private JLabel label_titulo;
@@ -92,6 +93,14 @@ public class Login extends JFrame{
                                 String archivo = (String) datos[i];
                                 transferenciaArchivos.onArchivoDisponible(archivo);
                             }
+                        } else if (datos.length > 0 && "archivoDescargado".equals(datos[0])) {
+                            String nombreArchivo = (String) datos[1];
+                            byte[] contenidoArchivo = (byte[]) datos[2];
+                            // Guardar el archivo en el sistema de archivos
+                            System.out.println("Guardando archivo: " + nombreArchivo);
+                            FileOutputStream fos = new FileOutputStream(cliente.pathDescarga() + nombreArchivo);
+                            fos.write(contenidoArchivo);
+                            System.out.println("Archivo descargado: " + nombreArchivo);
                         }
                     }
                 } catch (Exception e) {

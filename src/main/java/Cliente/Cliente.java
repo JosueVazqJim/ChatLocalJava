@@ -1,9 +1,6 @@
 package Cliente;
 
-import javax.swing.*;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 
 public class Cliente {
@@ -93,6 +90,30 @@ public class Cliente {
     public void enviarMensaje(String mensaje) {
         try {
             salida.writeObject(new Object[]{"mensaje", mensaje});
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void enviarArchivo(String path) throws IOException {
+        socket = new Socket("localhost", 5000);
+        System.out.println("Conectado al servidor");
+        // Streams de entrada y salida
+        salida = new ObjectOutputStream(socket.getOutputStream());
+        entrada = new ObjectInputStream(socket.getInputStream());
+
+        try {
+            // Abre el archivo
+            File file = new File(path); //se selecciona el archivo
+            FileInputStream fileInputStream = new FileInputStream(file); //se crea un flujo de entrada para leer el archivo
+            byte[] fileBytes = new byte[(int) file.length()]; //se crea un arreglo de bytes con el tamaño del archivo
+            fileInputStream.read(fileBytes); //se lee el archivo y se guarda en el arreglo de bytes
+
+            // Envia el nombre del archivo y su contenido al servidor
+            salida.writeObject(new Object[]{"enviarArchivo", file.getName(), fileBytes});
+
+            // Cierra el archivo
+            fileInputStream.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

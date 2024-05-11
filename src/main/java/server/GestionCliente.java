@@ -1,5 +1,6 @@
 package server;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -71,6 +72,14 @@ public class GestionCliente implements Runnable{
                             datosRespuesta[0] = "mensajesPrevios";
                             System.arraycopy(mensajesPrevios, 0, datosRespuesta, 1, mensajesPrevios.length);
                             enviarDatos(datosRespuesta);
+                            break;
+                        case "enviarArchivo":
+                            String nombreArchivo = (String) datosToServer[1]; //nombre del archivo
+                            byte[] fileBytes = (byte[]) datosToServer[2]; //contenido del archivo
+                            // prepara el archivo en el lugar de almacenamiento del servidor
+                            FileOutputStream fileOutputStream = new FileOutputStream(server.pathAlmacenamiento() + nombreArchivo);
+                            fileOutputStream.write(fileBytes); //escribe el archivo donde se le dijo que preparara
+                            fileOutputStream.close();
                             break;
                         case "exit":
                             System.out.println("Cerrando conexión");

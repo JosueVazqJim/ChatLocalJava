@@ -127,8 +127,8 @@ public class Server {
         }
     }
 
-    public void archivos() {
-        int index = 0;
+    public String pathAlmacenamiento() {
+        return "D:\\DOCUMENTOS\\CursoJava\\socketClienteServidorComputo\\src\\main\\java\\server\\almacenamiento\\";
     }
 
     public void removerCliente(GestionCliente cliente) {

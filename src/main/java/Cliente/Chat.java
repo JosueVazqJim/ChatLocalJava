@@ -30,7 +30,6 @@ public class Chat extends JFrame implements MensajeListener{
         setVisible(true);
 
         solicitoMensajesPrevios();
-        startListening();
         btn_salir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -81,21 +80,6 @@ public class Chat extends JFrame implements MensajeListener{
 
     public void enviarMensaje() {
         cliente.enviarMensaje(txt_mensajeEnviar.getText());
-    }
-
-    public void startListening() { //hilo para escuchar mensajes
-        new Thread(() -> {
-            while (listening) {
-                Object mensajeObj = cliente.mensajesGlobales(); //esta a la espera de un mensaje
-                if (mensajeObj instanceof Object[]) {
-                    Object[] datos = (Object[]) mensajeObj;
-                    if (datos.length > 0 && "mensajeGlobal".equals(datos[0])) {
-                        String mensajeGlobal = (String) datos[1];
-                        onMensajeRecibido(mensajeGlobal); //llama al metodo onMensajeRecibido de la interfaz
-                    }
-                }
-            }
-        }).start();
     }
 
     @Override

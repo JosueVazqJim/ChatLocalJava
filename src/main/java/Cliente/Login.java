@@ -50,9 +50,10 @@ public class Login extends JFrame{
         if (permiso){
             chat = new Chat(cliente, this);
             transferenciaArchivos = new TransferenciaArchivos(cliente, this);
+            startListening();
             setVisible(false);
-            chat.setVisible(true);
-            transferenciaArchivos.setVisible(false);
+            chat.setVisible(false);
+            transferenciaArchivos.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, "Inicio de sesión fallido", "Inicio de sesión", JOptionPane.ERROR_MESSAGE);
         }
@@ -74,4 +75,32 @@ public class Login extends JFrame{
     public void mostrarTransferenciaArchivos(){
         transferenciaArchivos.setVisible(true);
     }
+
+    public void startListening() {
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Object mensajeObj = cliente.mensajesGlobales(); //esta a la espera de un mensaje
+                    if (mensajeObj instanceof Object[]) {
+                        Object[] datos = (Object[]) mensajeObj;
+                        if (datos.length > 0 && "mensajeGlobal".equals(datos[0])) {
+                            String mensajeGlobal = (String) datos[1];
+                            chat.onMensajeRecibido(mensajeGlobal); //llama al metodo onMensajeRecibido de la instancia de Chat
+                        } else if (datos.length > 0 && "listaArchivos".equals(datos[0])) {
+                            System.out.println("Recibiendo lista de archivos");
+                            for (int i = 1; i < datos.length; i++) {
+                                String archivo = (String) datos[i];
+                                transferenciaArchivos.onArchivoDisponible(archivo);
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    // Manejar cualquier excepción que ocurra al recibir un mensaje
+                    e.printStackTrace();
+                    break; // Salir del bucle en caso de excepción
+                }
+            }
+        }).start();
+    }
+
 }

@@ -76,9 +76,19 @@ public class Cliente {
         }
     }
 
+    public void solicitarListaArchivos() {
+        try {
+            salida.writeObject(new Object[]{"solicitarListaArchivos"});
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public Object mensajesGlobales() {
         try {
-            return entrada.readObject();
+
+                return entrada.readObject();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
@@ -121,5 +131,6 @@ public class Cliente {
         socket.close();
         System.out.println("Conexión cerrada");
     }
+
 
 }

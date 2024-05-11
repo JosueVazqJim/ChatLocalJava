@@ -3,6 +3,8 @@ package Cliente;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class TransferenciaArchivos extends JFrame{
@@ -12,6 +14,10 @@ public class TransferenciaArchivos extends JFrame{
     private JButton btn_enviarArchivo;
     private JButton btn_salir;
     private JButton btn_chat;
+    private JList listaArchivos;
+    private DefaultListModel<String> archivosModel;
+
+    private boolean listening = true;
     private Login login;
     private Cliente cliente;
 
@@ -25,6 +31,11 @@ public class TransferenciaArchivos extends JFrame{
         setSize(600, 500);
         setLocationRelativeTo(null);
         setVisible(false);
+
+        cliente.solicitarListaArchivos();
+
+        archivosModel = new DefaultListModel<>();
+        listaArchivos.setModel(archivosModel);
 
         btn_selArchivo.addActionListener(new ActionListener() { // Seleccionar archivo
             @Override
@@ -66,6 +77,18 @@ public class TransferenciaArchivos extends JFrame{
                 }
             }
         });
+        listaArchivos.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    int index = fileList.locationToIndex(e.getPoint());
+                    if (index >= 0) {
+                        String fileName = fileList.getModel().getElementAt(index);
+                        descargarArchivo(fileName);
+                    }
+                }
+            }
+        });
     }
 
     public void mostrarSeleccionArchivo(){
@@ -81,5 +104,9 @@ public class TransferenciaArchivos extends JFrame{
         System.out.println("Sesión cerrada");
         cliente.cerrarConexion();
         this.dispose(); //libera los recursos
+    }
+
+    public void onArchivoDisponible(String archivo) { //metodo de la interfaz para mostrar mensajes
+        SwingUtilities.invokeLater(() -> archivosModel.addElement(archivo));
     }
 }

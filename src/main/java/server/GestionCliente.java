@@ -81,6 +81,17 @@ public class GestionCliente implements Runnable{
                             fileOutputStream.write(fileBytes); //escribe el archivo donde se le dijo que preparara
                             System.out.println("Archivo recibido: " + nombreArchivo);
                             fileOutputStream.close();
+                            enviarDatos(new Object[]{"listaArchivos", nombreArchivo});
+                            break;
+                        case "solicitarListaArchivos":
+                            System.out.println("Solicitando archivos disponibles");
+                            Object[] listaArchivos = server.obtenerArchivosDisponibles();
+                            // Agregar el encabezado "listaArchivos" al inicio del array de datos
+                            Object[] filesRespuesta = new Object[listaArchivos.length + 1];
+                            filesRespuesta[0] = "listaArchivos";
+                            System.arraycopy(listaArchivos, 0, filesRespuesta, 1, listaArchivos.length);
+                            System.out.println("Enviando lista de archivos");
+                            enviarDatos(filesRespuesta);
                             break;
                         case "exit":
                             System.out.println("Cerrando conexión");

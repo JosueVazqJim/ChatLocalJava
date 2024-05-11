@@ -1,11 +1,13 @@
 package server;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Server {
@@ -135,5 +137,23 @@ public class Server {
         clientes.remove(cliente);
         System.out.println("Cliente desconectado. Clientes totales: " + clientes.size());
 
+    }
+    public Object[] obtenerArchivosDisponibles() {
+        try {
+            File carpetaArchivos = new File("D:\\DOCUMENTOS\\CursoJava\\socketClienteServidorComputo\\src\\main\\java\\server\\almacenamiento");
+            File[] archivos = carpetaArchivos.listFiles();
+            List<String> nombresArchivos = new ArrayList<>();
+            if (archivos != null) {
+                for (File archivo : archivos) {
+                    if (archivo.isFile()) {
+                        System.out.println("Archivo encontrado: " + archivo.getName());
+                        nombresArchivos.add(archivo.getName());
+                    }
+                }
+            }
+            return nombresArchivos.toArray();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
